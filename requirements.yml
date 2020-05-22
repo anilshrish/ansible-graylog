@@ -1,0 +1,20 @@
+# graylog2 
+
+- src: git+https://github.com/Graylog2/graylog-ansible-role
+  version: master
+# version: 3.0.1
+
+# graylog2 dependency
+
+- src: undergreen.mongodb
+  version: v2.6.1
+
+- src: geerlingguy.java
+  version: master
+
+# 0.2 is required version to use elasticsearch 2.x
+- src: elastic.elasticsearch
+  version: "5.5.1"
+
+- src: jdauphant.nginx
+  version: master

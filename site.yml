@@ -1,0 +1,70 @@
+---
+# This --- defines that this yaml file will have 2 spaces for indentation.
+
+
+# In case you use Ubuntu xenial we will add ppa for java-jdk8
+# as noticed on warning above we need to take care of it. 
+
+# - name: Add java-jdk-8 ppa for Ubuntu xenial
+- hosts: graylog2_servers
+  become: yes
+
+  # You can specify a proxy_env var with your proxy settings here
+  # check example: https://github.com/CoffeeITWorks/ansible-generic-help/blob/master/example1/group_vars/all/vars#L14
+  #environment: "{{ proxy_env }}"
+
+  # tasks:
+  #   - name: installing repo for Java 8 in Ubuntu 16.04
+  #     apt_repository: repo='ppa:openjdk-r/ppa'
+  #     when: ansible_distribution_release == 'xenial'
+
+# Now we will apply all roles to our graylog2_servers:
+
+- name: Apply roles for graylog2 servers
+  hosts: graylog2_servers
+  become: yes
+
+  # You can specify a proxy_env var with your proxy settings here
+  # check example: https://github.com/CoffeeITWorks/ansible-generic-help/blob/master/example1/group_vars/all/vars#L14
+  #environment: "{{ proxy_env }}"
+
+  roles:
+    # This step is important as described in waring above
+    - role: geerlingguy.java
+      # when: ansible_distribution_release == 'xenial'
+      java_packages:
+        - openjdk-8-jdk
+      tags:
+        - role::elasticsearch
+        - graylog2_servers
+
+    # This step is important as described in waring above
+    # - role: geerlingguy.java
+    #   when: ansible_os_family == "RedHat" and ansible_lsb.major_release|int >= 7
+    #   java_packages:
+    #     - java-1.8-openjdk
+    #   tags:
+    #     - role::elasticsearch
+    #     - graylog2_servers
+
+    # - role: undergreen.mongodb
+    #   tags:
+    #     - role::mongodb
+    #     - graylog2_servers
+
+    # ensure you have installed 0.2 branch for elasticsearch 2.x
+    - role: elastic.elasticsearch
+      tags:
+        - role::elasticsearch
+        - graylog2_servers
+
+    - role: jdauphant.nginx
+      tags:
+        - role::nginx
+        - graylog2_servers
+
+    # Here we will install graylog
+    - role: graylog-ansible-role
+      tags:
+        - role::graylog
+        - graylog2_servers

@@ -1,0 +1,32 @@
+---
+# https://github.com/Graylog2/graylog-ansible-role
+
+es_instance_name: 'graylog'
+es_scripts: False
+es_templates: False
+es_version_lock: False
+es_heap_size: 1g
+
+# Graylog2.3 supports elasticsearch 5, so must install elasticsearch 5.x
+es_major_version: "5.x"
+es_version: "5.5.1"
+
+graylog_version: '2.3'
+# pin version is broken in: 2.3.0 of ansible_graylog2_role
+# hope will be fixed on future, you will need to delete /etc/apt/preferences.d/elasticsearch
+# see https://github.com/Graylog2/graylog-ansible-role/commit/4e24252bd71e4cc2bb53df0a069c617138dc09cd#commitcomment-25811249
+graylog_es_debian_pin_version: '5.*'
+
+es_config: {
+  node.name: "graylog",
+  cluster.name: "graylog",
+  http.port: 9200,
+  transport.tcp.port: 9300,
+  network.host: 0.0.0.0,
+  node.data: true,
+  node.master: true,
+}
+
+
+# Ensure to add this option if not added elastic.elasticsearch will install openjdk-7 that will break graylog2
+es_java_install:               False
